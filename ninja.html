@@ -272,6 +272,12 @@
                     </div>
                 </div>
             </section>
+<section class="robot-controls">
+  <button id="moveForwardBtn">Move Forward</button>
+  <button id="moveBackwardBtn">Move Backward</button>
+  <button id="turnLeftBtn">Turn Left</button>
+  <button id="turnRightBtn">Turn Right</button>
+</section>
 
             <section class="control--footer">
                 <div class='settings' style="text-align: center;">
@@ -318,6 +324,43 @@
     </footer>
 
     <script>
+        const socket = new WebSocket('ws://192.168.4.1:100'); // Adjust the IP and port
+
+socket.onopen = () => console.log('WebSocket connection established');
+
+function sendCommand(command) {
+  if (socket.readyState === WebSocket.OPEN) {
+    socket.send(JSON.stringify(command));
+  } else {
+    console.error('WebSocket is not connected.');
+  }
+}
+
+function moveForward(duration, speed) {
+  sendCommand({ N: 2, D1: 1, D2: speed, T: duration });
+}
+
+function moveBackward(duration, speed) {
+  sendCommand({ N: 2, D1: 2, D2: speed, T: duration });
+}
+
+function turnLeft(duration, speed) {
+  sendCommand({ N: 2, D1: 3, D2: speed, T: duration });
+}
+
+function turnRight(duration, speed) {
+  sendCommand({ N: 2, D1: 4, D2: speed, T: duration });
+}
+
+// Bind actions to UI elements
+document.getElementById('moveForwardBtn').addEventListener('click', () => moveForward(2000, 150));
+document.getElementById('moveBackwardBtn').addEventListener('click', () => moveBackward(2000, 150));
+document.getElementById('turnLeftBtn').addEventListener('click', () => turnLeft(1000, 100));
+document.getElementById('turnRightBtn').addEventListener('click', () => turnRight(1000, 100));
+// Replace 'moveBackwardBtn', 'turnLeftBtn', and 'turnRightBtn' with your actual button IDs.
+
+// Add similar event listeners for moveBackward, turnLeft, turnRight, etc.
+
         let KEY;
         let Ninja = document.getElementById("myNinja");
         let Ip = document.getElementById("ip");
